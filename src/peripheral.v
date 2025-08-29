@@ -8,7 +8,7 @@
 // Change the name of this module to something that reflects its functionality and includes your name for uniqueness
 // For example tqvp_yourname_spi for an SPI peripheral.
 // Then edit tt_wrapper.v line 38 and change tqvp_example to your chosen module name.
-module tqvp_example (
+module tqvp_nes_snes_controller (
     input         clk,          // Clock - the TinyQV project clock is normally set to 64MHz.
     input         rst_n,        // Reset_n - low to reset.
 
@@ -47,14 +47,14 @@ module tqvp_example (
         .SNES_PMOD_Latch(ui_in[4]),   // PMOD IO5 ->  ui_in[4]
 
         // button states: to data_out[7:0] on address 0x0
-        .A_out(standard_buttons[0]),
-        .B_out(standard_buttons[1]),
-        .select_out(standard_buttons[2]),
-        .start_out(standard_buttons[3]),
-        .up_out(standard_buttons[4]),
-        .down_out(standard_buttons[5]),
-        .left_out(standard_buttons[6]),
-        .right_out(standard_buttons[7]),
+        .A_out(standard_buttons[7]),
+        .B_out(standard_buttons[6]),
+        .select_out(standard_buttons[5]),
+        .start_out(standard_buttons[4]),
+        .up_out(standard_buttons[3]),
+        .down_out(standard_buttons[2]),
+        .left_out(standard_buttons[1]),
+        .right_out(standard_buttons[0]),
         
         // Additional SNES buttons: to data_out[3:0] on address 0x1
         .X_out(extra_snes_buttons[3]),
@@ -80,11 +80,11 @@ module tqvp_example (
     // uo_out[7] -> NES controller clk
 
     // All output pins must be assigned. If not used, assign to 0.
-    assign uo_out[5:0] = 0;
+    assign uo_out[5:0] = 6'b000000;
 
-    assign data_out = (address == 4'h0) ? standard_buttons :
-                      (address == 4'h1) ? {4'b0000, extra_snes_buttons} :
-                      (address == 4'h2) ? {7'b0000, is_snes} :
+    assign data_out = (address == 4'h0) ? {7'b0000, is_snes} :
+                      (address == 4'h1) ? standard_buttons :
+                      (address == 4'h2) ? {4'b0000, extra_snes_buttons} :
                       8'h0;
 
 endmodule
