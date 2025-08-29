@@ -26,26 +26,65 @@ module tqvp_example (
     output [7:0]  data_out      // Data out from the peripheral, set this in accordance with the supplied address
 );
 
-    // Example: Implement an 8-bit read/write register at address 0
-    reg [7:0] example_data;
-    always @(posedge clk) begin
-        if (!rst_n) begin
-            example_data <= 0;
-        end else begin
-            if (address == 4'h0) begin
-                if (data_write) example_data <= data_in;
-            end
-        end
-    end
+    wire [7:0] standard_buttons;
+    wire [3:0] extra_snes_buttons;
+    wire is_snes;
+
+    NESTest_Top nes_snes_module (
+
+        // system
+        .system_clk_64MHz(clk), // System clock from TinyQV (64MHz)
+        .rst_n(rst_n),         // active low reset
+
+        // NES controller interface [GPIO]. We generate latch and clock internally and send to controller. Data returns.
+        .NES_Data(ui_in[1]), // NES controller data -> ui_in[1]
+        .NES_Latch(uo_out[6]), // uo_out[6] -> NES controller latch
+        .NES_Clk(uo_out[7]), // uo_out[7] -> NES controller clk
+
+        // SNES PMOD interface [3 pins]
+        .SNES_PMOD_Data(ui_in[2]),    // PMOD IO7 ->  ui_in[2] 
+        .SNES_PMOD_Clk(ui_in[3]),     // PMOD IO6 ->  ui_in[3]
+        .SNES_PMOD_Latch(ui_in[4]),   // PMOD IO5 ->  ui_in[4]
+
+        // button states: to data_out[7:0] on address 0x0
+        .A_out(standard_buttons[0]),
+        .B_out(standard_buttons[1]),
+        .select_out(standard_buttons[2]),
+        .start_out(standard_buttons[3]),
+        .up_out(standard_buttons[4]),
+        .down_out(standard_buttons[5]),
+        .left_out(standard_buttons[6]),
+        .right_out(standard_buttons[7]),
+        
+        // Additional SNES buttons: to data_out[3:0] on address 0x1
+        .X_out(extra_snes_buttons[3]),
+        .Y_out(extra_snes_buttons[2]),
+        .L_out(extra_snes_buttons[1]),
+        .R_out(extra_snes_buttons[0]),
+        
+        // Status indicator: to data_out[0] on address 0x2
+        .controller_status(is_snes)  // 1 = SNES active, 0 = NES active
+
+    );
+
+    // IO connections so far:
+
+    // ui_in
+    // NES controller data -> ui_in[1]
+    // SNES_PMOD_Data ->  ui_in[2] 
+    // SNES_PMOD_Clk ->  ui_in[3]
+    // SNES_PMOD_Latch ->  ui_in[4]
+
+    // uo_out
+    // uo_out[6] -> NES controller latch
+    // uo_out[7] -> NES controller clk
 
     // All output pins must be assigned. If not used, assign to 0.
-    assign uo_out  = ui_in + example_data;  // Example: uo_out is the sum of ui_in and the example register
+    assign uo_out[5:0] = 0;
 
-    // Address 0 reads the example data register.  
-    // Address 1 reads ui_in
-    // All other addresses read 0.
-    assign data_out = (address == 4'h0) ? example_data :
-                      (address == 4'h1) ? ui_in :
-                      8'h0;    
+    assign data_out = (address == 4'h0) ? standard_buttons :
+                      (address == 4'h1) ? {4'b0000, extra_snes_buttons} :
+                      (address == 4'h2) ? {7'b0000, is_snes} :
+                      8'h0;
 
 endmodule
