@@ -46,7 +46,7 @@ module tqvp_nes_snes_controller (
         .SNES_PMOD_Clk(ui_in[3]),     // PMOD IO6 ->  ui_in[3]
         .SNES_PMOD_Latch(ui_in[4]),   // PMOD IO5 ->  ui_in[4]
 
-        // button states: to data_out[7:0] on address 0x0
+        // button states: to data_out[7:0] on address 0x1
         .A_out(standard_buttons[7]),
         .B_out(standard_buttons[6]),
         .select_out(standard_buttons[5]),
@@ -56,13 +56,13 @@ module tqvp_nes_snes_controller (
         .left_out(standard_buttons[1]),
         .right_out(standard_buttons[0]),
         
-        // Additional SNES buttons: to data_out[3:0] on address 0x1
+        // Additional SNES buttons: to data_out[3:0] on address 0x2
         .X_out(extra_snes_buttons[3]),
         .Y_out(extra_snes_buttons[2]),
         .L_out(extra_snes_buttons[1]),
         .R_out(extra_snes_buttons[0]),
         
-        // Status indicator: to data_out[0] on address 0x2
+        // Status indicator: to data_out[0] on address 0x0
         .controller_status(is_snes)  // 1 = SNES active, 0 = NES active
 
     );
