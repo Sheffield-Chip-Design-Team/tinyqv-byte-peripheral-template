@@ -81,7 +81,7 @@ module tqvp_nes_snes_controller (
 
     // All output pins must be assigned. If not used, assign to 0.
     assign uo_out[5:0] = 6'b000000;
-
+    //  BUG: TT-RV-0001 - NO_INVERT
     assign data_out = (address == 4'h0) ? {7'b0000, is_snes} :
                       (address == 4'h1) ? standard_buttons :
                       (address == 4'h2) ? {4'b0000, extra_snes_buttons} :
