@@ -8,6 +8,9 @@ module tb ();
 
   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
   initial begin
+    nes_latch = 0;
+    nes_clk = 0;
+    nes_data = 0;
     $dumpfile("tb.vcd");
     $dumpvars(0, tb);
     #1;
@@ -26,6 +29,18 @@ module tb ();
   wire VPWR = 1'b1;
   wire VGND = 1'b0;
 `endif
+
+  // helper signals for testbench debug
+
+    reg nes_latch;
+    reg nes_clk;
+    reg nes_data;
+
+  always @(*) begin
+    nes_latch = uo_out[6];
+    nes_clk   = uo_out[7];
+    ui_in[1]  = nes_data;
+  end
 
   tt_um_tqv_peripheral_harness test_harness (
 

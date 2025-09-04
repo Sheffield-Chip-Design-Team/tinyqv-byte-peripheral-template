@@ -1,0 +1,20 @@
+#!/bin/bash
+# Script to get coverage data
+if [ "$#" -eq 0 ] || [[ " $* " == *" -h "* ]] || [[ " $* " == *" --help "* ]]; then
+    show_help
+fi
+
+covered score -v\
+ src/FPGA_NESReciever.v -v src/peripheral.v \
+ -t tqvp_nes_snes_controller                \
+ -i tb.test_harness.user_peripheral         \
+ -c line,comb,toggle                        \
+ -vcd test/tb.vcd
+
+if [[ " $@ " =~ " --verbose " ]]; then
+  covered report -d v cov.cdd 2>&1 | tee coverage.log
+else
+   covered report cov.cdd 2>&1 | tee coverage.log
+fi
+
+
