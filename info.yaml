@@ -19,7 +19,6 @@ project:
   source_files:
     - "peripheral.v"
     - "tt_wrapper.v"
-    - "nes_test_top.v"
     - "test_harness/falling_edge_detector.sv"
     - "test_harness/rising_edge_detector.sv"
     - "test_harness/reclocking.sv"

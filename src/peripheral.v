@@ -30,7 +30,7 @@ module tqvp_nes_snes_controller (
     wire [3:0] extra_snes_buttons;
     wire is_snes;
 
-    NESTest_Top nes_snes_module (
+    nes_test_top nes_snes_module (
 
         // system
         .system_clk_64MHz(clk), // System clock from TinyQV (64MHz)
