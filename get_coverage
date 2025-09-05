@@ -5,7 +5,7 @@ if [ "$#" -eq 0 ] || [[ " $* " == *" -h "* ]] || [[ " $* " == *" --help "* ]]; t
 fi
 
 covered score -v\
- src/FPGA_NESReciever.v -v src/peripheral.v \
+ src/nes_test_top.v -v src/peripheral.v \
  -t tqvp_nes_snes_controller                \
  -i tb.test_harness.user_peripheral         \
  -c line,comb,toggle                        \
