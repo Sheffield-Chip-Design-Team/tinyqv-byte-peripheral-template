@@ -36,15 +36,16 @@ async def test_sanity(dut):
     # The following assertion is just an example of how to check the output values.
     # Map pressed_button to a binary value in descending powers of 2 from 128
     
+    # Active low buttons
     button_map = {
-        "A": 128,
-        "B": 64,
-        "Select": 32,
-        "Start": 16,
-        "Up": 8,
-        "Down": 4,
-        "Left": 2,
-        "Right": 1
+        "A":     0b01111111,
+        "B":     0b10111111,
+        "Select":0b11011111,
+        "Start": 0b11101111,
+        "Up":    0b11110111,
+        "Down":  0b11111011,
+        "Left":  0b11111101,
+        "Right": 0b11111110
     }
 
     dut._log.info(f"Read value from std_buttons: {button_map[pressed_button]:08b}")
