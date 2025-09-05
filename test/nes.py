@@ -6,7 +6,7 @@ from cocotb.triggers import RisingEdge
 class NES_Controller:
 
     # NES controller button order: A, B, Select, Start, Up, Down, Left, Right
-    BUTTONS = ['A', 'B', 'Select', 'Start', 'Up', 'Down', 'Left', 'Right']
+    BUTTONS = ["A", "B", "Select", "Start", "Up", "Down", "Left", "Right"]
 
     def __init__(self, dut):
         self.dut = dut
@@ -32,6 +32,8 @@ class NES_Controller:
         elif button in self.BUTTONS:
             self.log.info(f"pressing button: {button}")
             self.button_states[button] = True
+       
+        return button
 
     def release(self, button):
         if button in self.BUTTONS:

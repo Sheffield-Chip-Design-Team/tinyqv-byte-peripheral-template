@@ -26,17 +26,29 @@ async def test_sanity(dut):
     tqv = TinyQV(dut, PERIPHERAL_NUM)
     await tqv.reset()
 
-    nes.press('A')
+    pressed_button = nes.press()
 
     await ClockCycles(dut.clk, 10)
 
     # wait for a full timer cycle for the input to be registerd
-    await Timer(300, units="us")
+    await Timer(210, units="us")
     
     # The following assertion is just an example of how to check the output values.
-
-    assert await tqv.read_reg(1) == 0b10000000
+    # Map pressed_button to a binary value in descending powers of 2 from 128
     
+    button_map = {
+        "A": 128,
+        "B": 64,
+        "Select": 32,
+        "Start": 16,
+        "Up": 8,
+        "Down": 4,
+        "Left": 2,
+        "Right": 1
+    }
+
+    dut._log.info(f"Read value from std_buttons: {button_map[pressed_button]:08b}")
+    assert await tqv.read_reg(1) == button_map[pressed_button]
 
     # Keep testing the module by changing the input values, waiting for
     # one or more clock cycles, and asserting the expected output values.

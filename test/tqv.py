@@ -21,7 +21,7 @@ class TinyQV:
     # Reset the design, this reset will initialize TinyQV and connect
     # all inputs and outputs to your peripheral.
     async def reset(self):
-        self.dut._log.info("Reset")
+        self.log.info("Reset")
         self.dut.ena.value = 1
         self.dut.ui_in.value = 0
         self.dut.uio_in.value = 0
