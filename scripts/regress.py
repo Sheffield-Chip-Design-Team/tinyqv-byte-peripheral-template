@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime
 import concurrent.futures
 from tqdm import tqdm
+from coverage import get_coverage, merge_coverage, clean_cov_dir, report_coverage
 
 def run_test(runs=1, width=5):
     # find all directories with a test Makefile inside
@@ -81,7 +82,7 @@ from datetime import datetime
 import concurrent.futures
 from tqdm import tqdm
 
-def run_test(runs=1, width=5):
+def run_test(runs=1, width=5, clean=False, cov_dir="cov"):
     # Find all directories with a test Makefile inside
     folders_with_makefile = []
     for root, _, files in os.walk("./.."):
@@ -115,14 +116,21 @@ def run_test(runs=1, width=5):
         master_log.write(f"Total tasks: {len(tasks)}\n")
         master_log.write(f"========================\n\n")
         
-    def run_make(folder, run_idx):
+
+    def run_make(folder, run_idx, work_dir):
+
         # Copy environment and set RANDOM_SEED
         seed = random.randint(10**9, 10**10 - 1)
         module_name = os.path.basename(os.path.abspath(folder))
         desc = f"[{module_name} run {run_idx}] Using seed {seed}"
-        log_header = f"\n === {desc} ===\n"
+        log_header = f"\n=== {desc} ===\n"
+        vcd_path = f"{work_dir}/tb_{seed}.vcd"
 
-        cmd = ["make", f"RANDOM_SEED={seed}"] 
+        cmd = [
+        "make",
+        f"RANDOM_SEED={seed}",
+        f"VCD_PATH={vcd_path}"
+]
         result = subprocess.run(
             cmd,
             cwd=folder,
@@ -130,6 +138,12 @@ def run_test(runs=1, width=5):
             stderr=subprocess.STDOUT,
             text=True
         )
+        src_dir = "./../src"
+        srcs = [f"{src_dir}/FPGA_NESReciever.v" , f"{src_dir}/peripheral.v" ]
+
+        get_coverage(srcs=srcs, vcd=vcd_path, top_module="tqvp_nes_snes_controller", hier_path="tb.test_harness.user_peripheral", seed=seed)
+
+          #  result.stdout += f"\n--- Coverage Output ---\n{coverage_result.stdout}\n"
         return log_header + result.stdout, desc
 
     # Run tasks in batches
@@ -141,7 +155,7 @@ def run_test(runs=1, width=5):
             print(f"Running test batch {i//num_batches + 1}: {batch_descs}")
 
             futures = {
-                executor.submit(run_make, folder, run_idx): idx
+                executor.submit(run_make, folder, run_idx, cov_dir): idx
                 for idx, (folder, run_idx) in enumerate(batch_tasks, start=i)
             }
 
@@ -156,13 +170,15 @@ def run_test(runs=1, width=5):
                     pbar.update(1)
 
             print(f"Batch {i//num_batches + 1} finished!")
-      
+
+
     # write all logs to the master regression log
     with open(master_log_filename, "a") as master_log:
          for log in logs:
             master_log.write(log)
 
     print("All tests finished!")
+    merge_coverage(work_dir="cov", merged_cov_file="merged.cdd")
 
 def main():
     latest_log_path = "latest_regress.log"
@@ -172,8 +188,21 @@ def main():
     parser = argparse.ArgumentParser(description="Run make in folders with Makefile.")
     parser.add_argument("-runs", type=int, default=1, help="Number of repetitions per folder")
     parser.add_argument("-width", type=int, default=4, help="Number of threads to use")
+    parser.add_argument("-clean", action="store_true", help="Clean before running tests")
+    parser.add_argument("-verbose", action="store_true", help="Enable verbose coverage output")
+
     args = parser.parse_args()
-    run_test(runs=args.runs, width=args.width)
+
+    cov_dir = "cov"
+    os.makedirs(cov_dir, exist_ok=True)
+   
+    if args.clean:
+        print("Cleaning cov directory before tests starts")
+        clean_cov_dir(cov_dir=cov_dir)
+
+    run_test(runs=args.runs, width=args.width, cov_dir=cov_dir)
+
+    report_coverage(cov_dir=cov_dir, cov_file="merged.cdd", verbose=args.verbose)
 
 if __name__ == "__main__":
     main()

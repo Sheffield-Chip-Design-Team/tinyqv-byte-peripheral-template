@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: © 2025 Tiny Tapeout
 # SPDX-License-Identifier: Apache-2.0
 
+from random import randint
 import cocotb
 from nes import NES_Controller
 
@@ -10,7 +11,6 @@ from tqv import TinyQV
 
 # When submitting your design, change this to 16 + the peripheral number
 PERIPHERAL_NUM = 16 
-
 
 @cocotb.test()
 async def test_sanity(dut):
@@ -31,8 +31,8 @@ async def test_sanity(dut):
     await ClockCycles(dut.clk, 10)
 
     # wait for a full timer cycle for the input to be registerd
-    await Timer(210, units="us")
-    
+    await Timer(randint(200, 400), units="us")
+
     # The following assertion is just an example of how to check the output values.
     # Map pressed_button to a binary value in descending powers of 2 from 128
     

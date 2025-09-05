@@ -13,6 +13,12 @@ export RANDOM_SEED
 $(info Using random seed: $(RANDOM_SEED))
 endif
 
+ifdef VCD_PATH
+export VCD_PATH
+$(info Using VCD file dir: $(VCD_PATH))
+endif
+
+
 ifneq ($(GATES),yes)
 
 # RTL simulation:
@@ -37,14 +43,18 @@ VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 endif
 
 # Allow sharing configuration between design and testbench via `include`:
-COMPILE_ARGS 		+= -I$(SRC_DIR)
+COMPILE_ARGS  += -I$(SRC_DIR)
 
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/tb.v
+
 TOPLEVEL = tb
 
 # MODULE is the basename of the Python test file
 MODULE = test
+PLUSARGS += +VCD_PATH=$(VCD_PATH)
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
+
+$(info VCD_PATH = $(VCD_PATH))
