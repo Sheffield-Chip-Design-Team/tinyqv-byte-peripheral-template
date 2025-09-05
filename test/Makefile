@@ -8,6 +8,11 @@ SRC_DIR = $(PWD)/../src
 PROJECT_SOURCES = peripheral.v FPGA_NESReciever.v
 ADDITIONAL_SOURCES = tt_wrapper.v test_harness/*.sv
 
+ifdef RANDOM_SEED
+export RANDOM_SEED
+$(info Using random seed: $(RANDOM_SEED))
+endif
+
 ifneq ($(GATES),yes)
 
 # RTL simulation:

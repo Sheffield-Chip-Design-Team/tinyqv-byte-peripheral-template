@@ -1,0 +1,70 @@
+#!/bin/bash
+# Written by JAK - v2.0
+# Cocotb Environment Test Run Script - Tiny Tapestation Project
+
+show_help() {
+    echo " "
+    echo "Cocotb Test Runner Script"
+    echo "James Ashie Kotey - SHaRC 2025"
+    echo "Usage:"
+    echo "  ./run_tests regress -runs <number> -width <number> [other options]"
+    echo "  ./run_tests sim [-tb=<testbench_name>]"
+    echo "  ./run_tests --help or -h"
+    echo ""
+    echo "Commands:"
+    echo "  regress   Run regression tests with specified options."
+    echo "  sim       Run simulation, optionally with a testbench."
+    echo "  help      Show this help message."
+    exit 0
+}
+
+# Show help if no args
+if [ "$#" -eq 0 ] || [[ " $* " == *" -h "* ]] || [[ " $* " == *" --help "* ]]; then
+    show_help
+fi
+
+# TODO: add filelists for test regressions
+
+# run the regress script
+if [[ " $@ " =~ " regress " ]]; then
+    args=()
+    for arg in "$@"; do
+        if [[ "$arg" != "regress" ]]; then
+            args+=("$arg")
+        fi
+    done
+    python3 ./../scripts/regress.py "${args[@]}"
+    exit 1
+fi
+
+# run the regress simulation makefile
+# TODO: look into testbench runner script for better customisability for individual tests
+
+if [[ " $@ " =~ " sim " ]]; then
+    args=()
+    tb_value=""
+    for arg in "$@"; do
+        case "$arg" in
+            -tb=*)
+                tb_value="${arg#-tb=}"
+                ;;
+            sim)
+                # skip, we just use it as a flag
+                ;;
+            *)
+                args+=("$arg")
+                ;;
+        esac
+    done
+
+    if [[ -n "$tb_value" ]]; then
+        echo "Exclusively running: $tb_value"
+        make TESTBENCH="$tb_value" 
+    else
+        echo "No testbench selected... running all testbenches."
+        make "${args[@]}"
+    fi
+
+    rm -rf __pycache__
+    exit 1
+fi
