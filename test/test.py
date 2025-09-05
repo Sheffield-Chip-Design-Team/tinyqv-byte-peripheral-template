@@ -31,7 +31,7 @@ async def test_sanity(dut):
     await ClockCycles(dut.clk, 10)
 
     # wait for a full timer cycle for the input to be registerd
-    await Timer(randint(200, 400), units="us")
+    await Timer(randint(200, 600), units="us")
 
     # The following assertion is just an example of how to check the output values.
     # Map pressed_button to a binary value in descending powers of 2 from 128

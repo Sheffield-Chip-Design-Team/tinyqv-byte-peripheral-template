@@ -22,7 +22,7 @@ module tb ();
     if ($value$plusargs("VCD_PATH=%s", vcdname)) begin
       $dumpfile(vcdname);
     end else begin
-      $dumpfile("work/tb.vcd");
+      $dumpfile("tb.vcd");
     end
     $dumpvars(0, tb);
     #1;
