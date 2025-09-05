@@ -6,16 +6,6 @@
 */
 module tb ();
 
-  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
-  initial begin
-    nes_latch = 0;
-    nes_clk = 0;
-    nes_data = 0;
-    $dumpfile("tb.vcd");
-    $dumpvars(0, tb);
-    #1;
-  end
-
   // Wire up the inputs and outputs:
   reg clk;
   reg rst_n;
@@ -35,6 +25,16 @@ module tb ();
     reg nes_latch;
     reg nes_clk;
     reg nes_data;
+  
+  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
+  initial begin
+    nes_latch = 0;
+    nes_clk = 0;
+    nes_data = 0;
+    $dumpfile("tb.vcd");
+    $dumpvars(0, tb);
+    #1;
+  end
 
   always @(*) begin
     nes_latch = uo_out[6];

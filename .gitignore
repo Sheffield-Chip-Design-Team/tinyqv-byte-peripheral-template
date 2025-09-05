@@ -1,6 +1,7 @@
 .DS_Store
 .idea
 *.vcd
+.venv
 runs
 tt_submission
 src/user_config.json
@@ -11,3 +12,4 @@ test/results.xml
 test/gate_level_netlist.v
 env/*
 !env/bin/get_coverage
+/scripts/latest_regress.log
