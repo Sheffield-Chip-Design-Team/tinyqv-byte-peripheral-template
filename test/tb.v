@@ -4,14 +4,26 @@
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
 */
+
+`ifndef VCD_PATH
+  `define VCD_PATH "tb.vcd"
+`endif
+
+
 module tb ();
 
-  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
+  string vcdname;  // large enough for a path
+
   initial begin
     nes_latch = 0;
     nes_clk = 0;
-    nes_data = 1;
-    $dumpfile("tb.vcd");
+    nes_data = 0;
+   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
+    if ($value$plusargs("VCD_PATH=%s", vcdname)) begin
+      $dumpfile(vcdname);
+    end else begin
+      $dumpfile("work/tb.vcd");
+    end
     $dumpvars(0, tb);
     #1;
   end
