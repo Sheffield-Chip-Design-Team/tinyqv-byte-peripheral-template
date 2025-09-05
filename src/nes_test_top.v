@@ -11,7 +11,7 @@
 
 */
 
-module NESTest_Top (
+module nes_test_top (
 
     // system
     input wire system_clk_64MHz, // System clock from TinyQV
