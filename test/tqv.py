@@ -23,7 +23,7 @@ class TinyQV:
     async def reset(self):
         self.log.info("Reset")
         self.dut.ena.value = 1
-        self.dut.ui_in.value = 0
+        self.dut.ui_in.value = 0b11111111
         self.dut.uio_in.value = 0
         self.dut.rst_n.value = 0
         await ClockCycles(self.dut.clk, 10)

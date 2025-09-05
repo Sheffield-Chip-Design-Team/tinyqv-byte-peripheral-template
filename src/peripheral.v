@@ -83,7 +83,7 @@ module tqvp_nes_snes_controller (
 
     //  BUG: TT-RV-0001 - NO_INVERT
     assign data_out = (address == 4'h0) ? {7'b0000, is_snes} :
-                      (address == 4'h1) ? ~standard_buttons  :
+                      (address == 4'h1) ? standard_buttons  :
                       (address == 4'h2) ? {4'b0000, extra_snes_buttons} :
                       8'h0;
 

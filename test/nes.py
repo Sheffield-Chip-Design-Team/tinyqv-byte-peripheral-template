@@ -54,7 +54,7 @@ class NES_Controller:
 
     def latch(self):
         # Latch button states into shift register
-        self.shift_register = [int(self.button_states[btn]) for btn in self.BUTTONS]
+        self.shift_register = [int(not self.button_states[btn]) for btn in self.BUTTONS]
         self.shift_index = 0
         data_val = self.shift_register[self.shift_index]
         self.log.info(f"latching nes latch: output: {data_val}")

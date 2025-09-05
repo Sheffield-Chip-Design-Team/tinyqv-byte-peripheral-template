@@ -10,7 +10,7 @@ module tb ();
   initial begin
     nes_latch = 0;
     nes_clk = 0;
-    nes_data = 0;
+    nes_data = 1;
     $dumpfile("tb.vcd");
     $dumpvars(0, tb);
     #1;
