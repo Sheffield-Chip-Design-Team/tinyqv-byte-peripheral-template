@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = peripheral.v FPGA_NESReciever.v
+PROJECT_SOURCES = peripheral.v nes_test_top.v
 ADDITIONAL_SOURCES = tt_wrapper.v test_harness/*.sv
 
 ifdef RANDOM_SEED
