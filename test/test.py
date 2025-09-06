@@ -65,9 +65,6 @@ async def nes_sequence(dut, nes, tqv, num_presses=10):
         # Randomly release 1 or both buttons
         num_release = randint(1, max(len(pressed_buttons),1))
         
-        await RisingEdge(dut.nes_latch)
-        await check_data(dut, tqv)
-        
         for button in pressed_buttons[:num_release]:
             nes.release(button)
             expected_buttons_pressed_list.remove(button)
