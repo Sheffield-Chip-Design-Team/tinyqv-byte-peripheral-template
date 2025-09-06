@@ -37,6 +37,7 @@ class NES_Controller:
 
     def release(self, button):
         if button in self.BUTTONS:
+            self.log.info(f"releasing button: {button}")
             self.button_states[button] = False
 
     # modelling methods
