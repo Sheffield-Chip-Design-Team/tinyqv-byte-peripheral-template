@@ -11,9 +11,7 @@ You can also include images in this folder and reference them in the markdown. E
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
 
-# Your project title
-
-NES/SNES Receiver
+# NES/SNES Receiver
 
 Author: Kwashie Andoh, James Ashie Kotey
 
