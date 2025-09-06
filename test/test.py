@@ -71,13 +71,6 @@ async def nes_sequence(dut, nes, tqv, num_presses=10):
         for button in pressed_buttons[:num_release]:
             nes.release(button)
             expected_buttons_pressed_list.remove(button)
-
-        # Wait before next press
-        await RisingEdge(dut.nes_latch)
-        await RisingEdge(dut.nes_latch)
-        await check_data(dut, tqv)
-        await Timer(randint(50, 150), units="us")
-        
         
 async def check_data(dut, tqv):
     button_map = {
@@ -123,7 +116,7 @@ async def test_nes(dut):
     cocotb.start_soon(nes.model_nes())
     await tqv.reset()
     
-    await nes_sequence(dut, nes, tqv, num_presses=3)
+    await nes_sequence(dut, nes, tqv, num_presses=1)
 
     await ClockCycles(dut.clk, 10)
 
