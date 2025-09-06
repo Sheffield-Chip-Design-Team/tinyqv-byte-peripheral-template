@@ -18,7 +18,7 @@ project:
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
     - "Receiver_Core.v"
-    - "snes_nes_rec_peripheral.v.v"
+    - "snes_nes_rec_peripheral.v"
     - "tt_wrapper.v"
     - "test_harness/falling_edge_detector.sv"
     - "test_harness/rising_edge_detector.sv"
