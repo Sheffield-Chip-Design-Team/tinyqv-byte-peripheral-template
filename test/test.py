@@ -74,6 +74,7 @@ async def nes_sequence(dut, nes, tqv, num_presses=10):
 
         # Wait before next press
         await RisingEdge(dut.nes_latch)
+        await RisingEdge(dut.nes_latch)
         await check_data(dut, tqv)
         await Timer(randint(50, 150), units="us")
         
