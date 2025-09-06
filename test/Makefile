@@ -15,9 +15,9 @@ endif
 
 ifdef VCD_PATH
 export VCD_PATH
+PLUSARGS   += +VCD_PATH=$(VCD_PATH)
 $(info Using VCD file dir: $(VCD_PATH))
 endif
-
 
 ifneq ($(GATES),yes)
 
@@ -52,9 +52,8 @@ TOPLEVEL = tb
 
 # MODULE is the basename of the Python test file
 MODULE = test
-PLUSARGS += +VCD_PATH=$(VCD_PATH)
+RUN_ARGS +=-g2012
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
-$(info VCD_PATH = $(VCD_PATH))
