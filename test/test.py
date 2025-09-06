@@ -12,54 +12,31 @@ from tqv import TinyQV
 # When submitting your design, change this to 16 + the peripheral number
 PERIPHERAL_NUM = 16 
 
-expected_buttons_pressed_list = []
+@cocotb.test()
+async def test_sanity(dut):
+    dut._log.info("Start")
+    nes = NES_Controller(dut)
+    # Set the clock period to 16 ns (~64 MHz)
+    clock = Clock(dut.clk, 16, units="ns")
+    cocotb.start_soon(clock.start())
 
-async def nes_sequencer(dut, nes, num_presses=10):
+    dut._log.info("Test project behavior")
+    cocotb.start_soon(nes.model_nes())
+
+    tqv = TinyQV(dut, PERIPHERAL_NUM)
+    await tqv.reset()
+
+    pressed_button = nes.press()
+
+    await ClockCycles(dut.clk, 10)
+
+    # wait for a full timer cycle for the input to be registerd
+    await Timer(randint(200, 400), units="us")
+
+    # The following assertion is just an example of how to check the output values.
+    # Map pressed_button to a binary value in descending powers of 2 from 128
     
-    buttons = ["A", "B", "Select", "Start", "Up", "Down", "Left", "Right"]
-
-    print(f"pressing {num_presses} buttons..")
-    
-    # Hold for start time
-    start_delay = randint(50, 5000)
-    await Timer(start_delay, units="us")
-
-    for _ in range(num_presses):
-        
-        # Choose 1 or 2 unique buttons to press
-        num_buttons = randint(1, 2)
-        pressed = set()
-       
-        if len(expected_buttons_pressed_list) < 2:
-            # Add a button that is not already pressed
-            available_buttons = [b for b in buttons if b not in pressed]
-            if available_buttons:
-                pressed.add(buttons.index(available_buttons[randint(0, len(available_buttons)-1)]))
-            pressed_buttons = [buttons[i] for i in pressed]
-       
-        for button in pressed_buttons:
-            nes.press(button)
-            await RisingEdge(dut.nes_latch)
-            print(f"adding button {button} to list.")
-            expected_buttons_pressed_list.append(button)
-
-        # Hold for random time
-        hold_time = randint(50, 500)
-        await Timer(hold_time, units="us")
-
-        # Randomly release 1 or both buttons
-        num_release = randint(1, len(pressed_buttons))
-        
-        for button in pressed_buttons[:num_release]:
-            nes.release(button)
-            print(f"releasing button {button} from list.")
-            await RisingEdge(dut.nes_latch)
-            expected_buttons_pressed_list.remove(button)
-
-        # Wait before next press
-        await Timer(randint(50, 150), units="us")
-
-async def nes_scoreboard(dut, tqv):
+    # Active high output
     button_map = {
         "A":     0b10000000,
         "B":     0b01000000,
