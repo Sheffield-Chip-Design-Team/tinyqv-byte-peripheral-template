@@ -13,20 +13,6 @@ module tb ();
 
   string vcdname; 
 
-  initial begin
-    nes_latch = 0;
-    nes_clk = 0;
-    nes_data = 0;
-   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
-    if ($value$plusargs("VCD_PATH=%s", vcdname)) begin
-      $dumpfile(vcdname);
-    end else begin
-      $dumpfile("tb.vcd");
-    end
-    $dumpvars(0, tb);
-    #1;
-  end
-
   // Wire up the inputs and outputs:
   reg clk;
   reg rst_n;
@@ -42,10 +28,9 @@ module tb ();
 `endif
 
   // helper signals for testbench debug
-
-    reg nes_latch;
-    reg nes_clk;
-    reg nes_data;
+  reg nes_latch;
+  reg nes_clk;
+  reg nes_data;
 
   always @(*) begin
     nes_latch = uo_out[6];
@@ -70,5 +55,19 @@ module tb ();
       .clk    (clk),      // clock
       .rst_n  (rst_n)     // not reset
   );
+
+    initial begin
+    nes_latch = 0;
+    nes_clk = 0;
+    nes_data = 0;
+   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
+    if ($value$plusargs("VCD_PATH=%s", vcdname)) begin
+      $dumpfile(vcdname);
+    end else begin
+      $dumpfile("tb.vcd");
+    end
+    $dumpvars(0, tb);
+    #1;
+  end
 
 endmodule
