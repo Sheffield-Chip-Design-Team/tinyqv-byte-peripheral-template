@@ -79,12 +79,97 @@ module tqvp_nes_snes_controller (
     // uo_out[7] -> NES controller clk
 
     // All output pins must be assigned. If not used, assign to 0.
+    
+    reg [7:0] std_btn_reg;
+    reg [7:0] ext_btn_reg;
+    reg [7:0] status_reg;
+    
+    reg latch;
+    reg n_clk;
+
+    always @(*) begin
+        if (is_snes) begin
+            n_clk = ui_in[3];
+            latch = ui_in[4];
+        end else begin
+            n_clk = uo_out[7]; // Use NES_Clk signal assigned to uo_out[7]
+            latch = uo_out[6]; // Use NES_Latch signal assigned to uo_out[6]
+        end
+    end
+    
+        // FSM to detect a sequence: negative edge followed by positive edge on latch signal
+        localparam READY = 1'b0;  
+        localparam TRIGGER = 1'b1;
+
+        reg latch_prev;
+        reg n_clk_prev;
+        reg  fsm_state;
+        reg enable_button_regs;
+        reg [3:0] clk_count;
+
+        always @(posedge clk) begin
+            latch_prev <= latch;
+            n_clk_prev <= n_clk;
+        end
+
+        // capture inputs at the end of frames
+        always @(posedge clk) begin
+            if (~rst_n) begin
+                fsm_state <= READY;
+                enable_button_regs <= 0;
+              
+                if (is_snes) begin
+                    clk_count <= 11;
+                end else begin
+                    clk_count <= 7;
+                end
+
+            end else begin
+                case (fsm_state)
+                    READY:
+                    begin
+                        if (n_clk_prev &~ n_clk) begin
+                            clk_count <= clk_count - 1;
+                        end
+                        if (clk_count == 0) begin
+                            fsm_state <= TRIGGER;
+                            enable_button_regs <= 1;
+                        end
+                    end
+                    TRIGGER: begin
+                        enable_button_regs <= 0;
+                        fsm_state <= READY;
+                        if (is_snes) begin
+                            clk_count <= 11;
+                        end else begin
+                            clk_count <= 7;
+                        end
+                    end
+                endcase
+            end
+        end
+
+    always @(posedge clk ) begin
+        if (~rst_n) begin
+            std_btn_reg <= 8'b0;
+            ext_btn_reg <= 8'b0;
+            status_reg <= 8'b0;
+        end else begin
+            status_reg  <= {7'b0000000, is_snes};
+           
+            if (enable_button_regs) begin // refresh at the end of a complete cycle
+                std_btn_reg <= standard_buttons;
+                ext_btn_reg <= {4'b0000, extra_snes_buttons};
+            end
+        end
+    end
+
     assign uo_out[5:0] = 6'b000000;
 
     //  BUG: TT-RV-0001 - NO_INVERT
-    assign data_out = (address == 4'h0) ? {7'b0000, is_snes} :
-                      (address == 4'h1) ? standard_buttons  :
-                      (address == 4'h2) ? {4'b0000, extra_snes_buttons} :
+    assign data_out = (address == 4'h0) ? std_btn_reg :
+                      (address == 4'h1) ? ext_btn_reg :
+                      (address == 4'h2) ? status_reg  :
                       8'h0;
 
 endmodule

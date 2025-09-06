@@ -63,7 +63,7 @@ async def nes_sequence(dut, nes, tqv, num_presses=10):
         await Timer(hold_time, units="us")
 
         # Randomly release 1 or both buttons
-        num_release = randint(1, len(pressed_buttons))
+        num_release = randint(1, max(len(pressed_buttons),1))
         
         await FallingEdge(dut.test_harness.user_peripheral.enable_button_regs)
         await check_data(dut, tqv)
