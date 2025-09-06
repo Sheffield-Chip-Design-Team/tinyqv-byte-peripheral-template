@@ -13,26 +13,32 @@ You can also include images in this folder and reference them in the markdown. E
 
 # Your project title
 
-Author: Your Name
+Author: Kwashie Andoh, James Ashie Kotey
 
 Peripheral index: nn
 
 ## What it does
 
-Explain what your peripheral does and how it works
+This module is an interface for the NES and SNES controllers that constantly reads the button state and exposes the relevant regs trhough three registers:
+
 
 ## Register map
 
 Document the registers that are used to interact with your peripheral
 
-| Address | Name  | Access | Description                                                         |
-|---------|-------|--------|---------------------------------------------------------------------|
-| 0x00    | DATA  | R/W    | A byte of data                                                      |
+| Address | Name        | Access | Description                                                         |
+|---------|-------------|--------|---------------------------------------------------------------------|
+| 0x00    | STD_BTNS    | R      | NES buttons (UP,DOWN,LEFT,RIGHT,B,A, START,SELECT)                  |
+| 0x01    | EXT_BTNS    | R      | Additional SNES buttons (X,Y,L,R)                                   |
+| 0x02    | STATUS      | R      | A single bit showing whether a snes controller has been connected   |
 
 ## How to test
 
-Explain how to use your project
+Plug in a SNES or NES controller and read the associated data address to find out which buttons have been pressed.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+SNES PMOD
+SNES CONTROLLER
+NES CONTROLLER
+NES CONTROLLER ADAPTER
