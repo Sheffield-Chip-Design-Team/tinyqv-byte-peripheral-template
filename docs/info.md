@@ -13,6 +13,8 @@ You can also include images in this folder and reference them in the markdown. E
 
 # Your project title
 
+NES/SNES Receiver
+
 Author: Kwashie Andoh, James Ashie Kotey
 
 Peripheral index: nn
@@ -34,7 +36,7 @@ Document the registers that are used to interact with your peripheral
 
 ## How to test
 
-Plug in a SNES or NES controller and read the associated data address to find out which buttons have been pressed.
+Plug in a SNES or nes controller and read the associated data address to find out which buttons have been pressed.
 
 ## External hardware
 
