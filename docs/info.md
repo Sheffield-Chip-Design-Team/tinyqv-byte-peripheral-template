@@ -33,11 +33,11 @@ For complete technical specification, see the [full documentation](https://docs.
 
 ## Register map
 
-| Address | Name        | Access | Description                                                         |
-|---------|-------------|--------|---------------------------------------------------------------------|
-| 0x00    | STD_BTNS    | R      | NES buttons (UP,DOWN,LEFT,RIGHT,B,A, START,SELECT)                  |
-| 0x01    | EXT_BTNS    | R      | Additional SNES buttons (X,Y,L,R)                                   |
-| 0x02    | STATUS      | R      | A single bit showing whether a snes controller has been connected   |
+| Address | Name              | Access | Description                                           |
+|---------|-------------------|--------|-------------------------------------------------------|
+| 0x00    | Controller Status | R      | Bit 0: controller type (1=SNES active, 0=NES active) |
+| 0x01    | Standard Buttons  | R      | Standard 8-button state (available on both NES/SNES) |
+| 0x02    | SNES Extended     | R      | SNES-only buttons (reads 0 when NES active)          |
 
 ### Standard Buttons Register (0x01)
 | Bit | Button | Description        |
