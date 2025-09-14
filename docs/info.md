@@ -21,7 +21,7 @@ Peripheral index: 15
 
 This peripheral provides a memory-mapped interface for reading NES and SNES gamepad controller states on the TinyQV RISC-V microcontroller. The design automatically detects which controller type is connected and exposes debounced button states through memory-mapped registers.
 
-For complete technical specification, see the [full documentation](https://docs.google.com/document/d/1l_B4vgzqy5NGJJAfXMa3Ju-xB-0VwFmkBfVjibhVOlY/edit?usp=sharing).
+> For complete technical specification, see the [full documentation](https://docs.google.com/document/d/1l_B4vgzqy5NGJJAfXMa3Ju-xB-0VwFmkBfVjibhVOlY/edit?usp=sharing).
 
 **Key Features**
 - Supports both NES (8 buttons) and SNES (12 buttons) controllers
@@ -38,6 +38,12 @@ For complete technical specification, see the [full documentation](https://docs.
 | 0x00    | Controller Status | R      | Bit 0: controller type (1=SNES active, 0=NES active) |
 | 0x01    | Standard Buttons  | R      | Standard 8-button state (available on both NES/SNES) |
 | 0x02    | SNES Extended     | R      | SNES-only buttons (reads 0 when NES active)          |
+
+### Controller Status Register (0x00)
+| Bit | Field | Description |
+|-----|-------|-------------|
+| 7-1 | Reserved | Always 0 |
+| 0   | controller_status | 1=SNES active, 0=NES active |
 
 ### Standard Buttons Register (0x01)
 | Bit | Button | Description        |
@@ -64,7 +70,7 @@ For complete technical specification, see the [full documentation](https://docs.
 
 ## How to test
 
-Plug in the SNES PMOD + Controller or NES controller + adapter and read the associated data address:
+Plug in the [SNES PMOD + Controller] or [NES controller + adapter] and read the associated data address:
 
 1. **Basic Controller Detection:**
    - Read address 0x00 to check controller status
