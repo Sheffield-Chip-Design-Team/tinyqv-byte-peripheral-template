@@ -19,7 +19,7 @@ Peripheral index: 15
 
 ## What it does
 
-This peripheral provides a memory-mapped interface for reading NES and SNES gamepad controller states on the TinyQV RISC-V microcontroller. The design automatically detects which controller type is connected and exposes debounced button states through memory-mapped registers.
+This peripheral provides an interface for reading NES and SNES gamepad controller states. It automatically detects which controller type is connected and exposes debounced button states through memory-mapped registers.
 
 > For complete technical specification, see the [full documentation](https://docs.google.com/document/d/1l_B4vgzqy5NGJJAfXMa3Ju-xB-0VwFmkBfVjibhVOlY/edit?usp=sharing).
 
