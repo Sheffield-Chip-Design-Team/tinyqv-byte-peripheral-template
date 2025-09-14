@@ -113,8 +113,6 @@ Plug in the [SNES PMOD + Controller] or [NES controller + adapter] and read the 
 
 ## Verification Plan
 
-The peripheral verification included multiple stages to ensure robust operation:
-
 **FPGA Prototyping:**
 - Real hardware validation on both NES and SNES controllers
 - Recorded demonstration videos available: [NES FPGA Test](https://drive.google.com/file/d/1BqGLOE_gKf2GouaVBYqFd00kkwdsnnQ2/view?usp=sharing)
