@@ -13,7 +13,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 # NES/SNES Receiver
 
-Author: [Kwashie Andoh](https://github.com/Kwash67), [James Ashie Kotey](https://github.com/Enjimneering)
+Authors: [Kwashie Andoh](https://github.com/Kwash67), [James Ashie Kotey](https://github.com/Enjimneering)
 
 Peripheral index: 15
 
