@@ -17,11 +17,11 @@ Authors: [Kwashie Andoh](https://github.com/Kwash67), [James Ashie Kotey](https:
 
 Peripheral index: 15
 
+> For complete technical specification, see the [full documentation](https://docs.google.com/document/d/1l_B4vgzqy5NGJJAfXMa3Ju-xB-0VwFmkBfVjibhVOlY/edit?usp=sharing).
+
 ## What it does
 
 This peripheral provides an interface for reading NES and SNES gamepad controller states. It automatically detects which controller type is connected and exposes debounced button states through memory-mapped registers.
-
-> For complete technical specification, see the [full documentation](https://docs.google.com/document/d/1l_B4vgzqy5NGJJAfXMa3Ju-xB-0VwFmkBfVjibhVOlY/edit?usp=sharing).
 
 **Key Features**
 - Supports both NES (8 buttons) and SNES (12 buttons) controllers
